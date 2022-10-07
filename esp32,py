@@ -1,0 +1,28 @@
+def do_connect():
+    import network
+    wlan = network.WLAN(network.STA_IF)
+    if not wlan.isconnected():
+        wlan.active(True)
+        #print('connecting to network...')
+        wlan.connect('MEGACABLE-DEA2', 'qkJs33mZ')
+        while not wlan.isconnected():
+            pass
+    print('network config:', wlan.ifconfig())
+
+do_connect()
+
+
+from umqtt.simple import MQTTClient
+from machine import Pin
+from time import sleep
+
+mqttc = MQTTClient('Dennis','192.168.100.44',keepalive=60)
+mqttc.connect()
+
+
+btn=Pin(0)
+
+
+while True:
+    mqttc.publish(b'pl1\Zoe',str(btn.value()).encode())
+    sleep(1)
