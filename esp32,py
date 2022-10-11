@@ -3,8 +3,7 @@ def do_connect():
     wlan = network.WLAN(network.STA_IF)
     if not wlan.isconnected():
         wlan.active(True)
-        #print('connecting to network...')
-        wlan.connect('MEGACABLE-DEA2', 'qkJs33mZ')
+        wlan.connect('IoT', '00000000')
         while not wlan.isconnected():
             pass
     print('network config:', wlan.ifconfig())
@@ -16,13 +15,23 @@ from umqtt.simple import MQTTClient
 from machine import Pin
 from time import sleep
 
-mqttc = MQTTClient('Dennis','192.168.100.44',keepalive=60)
-mqttc.connect()
-
 
 btn=Pin(0)
+led=Pin(2, Pin.OUT)
 
+def blinkLed(topic, msg):
+    if msg==b'1':        
+        led.value(1)
+    else:
+        led.value(0)
+
+mqttc = MQTTClient('Dennis','192.168.43.113',keepalive=60)
+mqttc.connect()
+mqttc.set_callback(blinkLed)
+mqttc.subscribe('Server')
 
 while True:
-    mqttc.publish(b'pl1\Zoe',str(btn.value()).encode())
-    sleep(1)
+    mqttc.check_msg()
+    if btn.value()==0:
+        mqttc.publish(b'pl1\Zoe',b'Dennis')
+        sleep(.5)
