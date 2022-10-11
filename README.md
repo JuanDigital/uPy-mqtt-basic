@@ -1,5 +1,8 @@
 # uPy-mqtt-basic
 
+Iot 
+esp32 enviar y recibir datos por mqtt con micro python y mosquitto
+
 editar broker mosquitto en windows 10
 
 Abrir como administrador -> cd c:\program files\mosquittomosquitto.conf
